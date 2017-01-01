@@ -1,7 +1,6 @@
 package com.lt.thread.test02;
 
 /**
- * Created by lt on 2016/12/31.
  * 每个对象都有各自的一把锁，如果想锁住多个对象的一个方法的话，方法前面加 synchronized static 即可
  * 在静态方法上加synchronized关键字，表示锁定.class类，类一级别的锁（独占.class类）
  */
