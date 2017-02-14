@@ -10,6 +10,7 @@ public class UseReentrantLock {
 	
 	public void method1(){
 		try {
+			lock.tryLock();
 			lock.lock();
 			System.out.println("当前线程:" + Thread.currentThread().getName() + "进入method1..");
 			Thread.sleep(1000);
@@ -18,7 +19,6 @@ public class UseReentrantLock {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
-			
 			lock.unlock();
 		}
 	}
@@ -33,13 +33,11 @@ public class UseReentrantLock {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
-			
 			lock.unlock();
 		}
 	}
 	
 	public static void main(String[] args) {
-
 		final UseReentrantLock ur = new UseReentrantLock();
 		Thread t1 = new Thread(new Runnable() {
 			@Override

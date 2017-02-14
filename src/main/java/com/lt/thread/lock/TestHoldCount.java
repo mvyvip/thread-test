@@ -4,6 +4,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * lock.getHoldCount()方法：只能在当前调用线程内部使用，不能再其他线程中使用
  * 那么我可以在m1方法里去调用m2方法，同时m1方法和m2方法都持有lock锁定即可 测试结果holdCount数递增
+ * 如果不是在方法内部调用  则不会递增
  *
  */
 public class TestHoldCount {
@@ -16,7 +17,7 @@ public class TestHoldCount {
 			lock.lock();
 			System.out.println("进入m1方法，holdCount数为：" + lock.getHoldCount());
 			
-			//调用m2方法
+			//调用m2方法 
 			m2();
 			
 		} catch (Exception e) {

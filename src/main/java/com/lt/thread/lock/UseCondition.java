@@ -39,7 +39,7 @@ public class UseCondition {
 		}
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		
 		final UseCondition uc = new UseCondition();
 		Thread t1 = new Thread(new Runnable() {
@@ -55,7 +55,7 @@ public class UseCondition {
 			}
 		}, "t2");
 		t1.start();
-
+		Thread.sleep(1000);
 		t2.start();
 	}
 	
