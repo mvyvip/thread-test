@@ -24,6 +24,7 @@ public class UseSemaphore {
                         Thread.sleep((long) (Math.random() * 10000));  
                         // 访问完后，释放  
                         semp.release();  
+                        System.out.println("当前线程" + Thread.currentThread().getName() + "执行完毕");
                     } catch (InterruptedException e) {  
                     }  
                 }  
