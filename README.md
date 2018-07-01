@@ -157,148 +157,108 @@ Eaglet Spring Boot Starter Security Oauth2 用于帮助你在Spring Boot项目�
     ]
     ```
     
-6. 前端监听后端返回http状态码为401的时候，刷新token，如果刷新失败就是refresh_token过期，直接重新调用获取token方法
+5. 前端监听后端返回http状态码为401的时候，刷新token，如果刷新失败就是refresh_token过期，直接重新调用获取token方法
 
         header中加Authorization字段：  base64(clientId:clientSecret)
         http://localhost:8081/oauth/token?grant_type=refresh_token&refresh_token=9f0509fc-5b9f-4067-acf2-38f5f545ff8f
     
-7. 退出登录
+6. 退出登录
     
         header中加Authorization字段： token_type + " " + access_token
         http://localhost:8081/logout
+        
+7. 自定义登录验证伪代码实现
+    
+    ```java
+    @Slf4j
+    @Component
+    public class ConsumerUserDetailsService implements UserDetailsService {
 
-- JDBC 配置
-```xml
-spring.datasource.druid.url= # 或spring.datasource.url= 
-spring.datasource.druid.username= # 或spring.datasource.username=
-spring.datasource.druid.password= # 或spring.datasource.password=
-spring.datasource.druid.driver-class-name= #或 spring.datasource.driver-class-name=
-```
-- 连接池配置
-```
-spring.datasource.druid.initial-size=
-spring.datasource.druid.max-active=
-spring.datasource.druid.min-idle=
-spring.datasource.druid.max-wait=
-spring.datasource.druid.pool-prepared-statements=
-spring.datasource.druid.max-pool-prepared-statement-per-connection-size= 
-spring.datasource.druid.max-open-prepared-statements= #和上面的等价
-spring.datasource.druid.validation-query=
-spring.datasource.druid.validation-query-timeout=
-spring.datasource.druid.test-on-borrow=
-spring.datasource.druid.test-on-return=
-spring.datasource.druid.test-while-idle=
-spring.datasource.druid.time-between-eviction-runs-millis=
-spring.datasource.druid.min-evictable-idle-time-millis=
-spring.datasource.druid.max-evictable-idle-time-millis=
-spring.datasource.druid.filters= #配置多个英文逗号分隔
-....//more
-```
-- 监控配置
-```
-# WebStatFilter配置，说明请参考Druid Wiki，配置_配置WebStatFilter
-spring.datasource.druid.web-stat-filter.enabled= #是否启用StatFilter默认值true
-spring.datasource.druid.web-stat-filter.url-pattern=
-spring.datasource.druid.web-stat-filter.exclusions=
-spring.datasource.druid.web-stat-filter.session-stat-enable=
-spring.datasource.druid.web-stat-filter.session-stat-max-count=
-spring.datasource.druid.web-stat-filter.principal-session-name=
-spring.datasource.druid.web-stat-filter.principal-cookie-name=
-spring.datasource.druid.web-stat-filter.profile-enable=
+        @Autowired
+        private SysUserService sysUserService;
 
-# StatViewServlet配置，说明请参考Druid Wiki，配置_StatViewServlet配置
-spring.datasource.druid.stat-view-servlet.enabled= #是否启用StatViewServlet默认值true
-spring.datasource.druid.stat-view-servlet.url-pattern=
-spring.datasource.druid.stat-view-servlet.reset-enable=
-spring.datasource.druid.stat-view-servlet.login-username=
-spring.datasource.druid.stat-view-servlet.login-password=
-spring.datasource.druid.stat-view-servlet.allow=
-spring.datasource.druid.stat-view-servlet.deny=
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            SysUser sysUser = sysUserService.findUserByName(username);
+            if(sysUser == null) {
+                return null;
+            }
 
-# Spring监控配置，说明请参考Druid Github Wiki，配置_Druid和Spring关联监控配置
-spring.datasource.druid.aop-patterns= # Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
-```
-Druid Spring Boot Starter 不仅限于对以上配置属性提供支持，[```DruidDataSource```](https://github.com/alibaba/druid/blob/master/src/main/java/com/alibaba/druid/pool/DruidDataSource.java) 内提供```setter```方法的可配置属性都将被支持。你可以参考WIKI文档或通过IDE输入提示来进行配置。配置文件的格式你可以选择```.properties```或```.yml```，效果是一样的，在配置较多的情况下推荐使用```.yml```。
+            List<String> perms = sysUserService.findPerms(sysUser.getId());
 
+            return new CustomUserDetails(sysUser.getId(), username, sysUser.getPassword(),
+                sysUser.getStatus() == 1 ? true : false, true, true, true,
+                AuthorityUtils.createAuthorityList(perms.toArray(new String[perms.size()])));
+        }
+    }
+    ```
+    
+8. 扩展security默认返回数据案例
+    
+    ```java
+    @Data
+    public class CustomUserDetails extends User {
 
+        private Long userId;
 
-## 如何配置多数据源
-1. 添加配置
-```xml
-spring.datasource.url=
-spring.datasource.username=
-spring.datasource.password=
+        public CustomUserDetails(String username, String password,
+            Collection<? extends GrantedAuthority> authorities) {
+            super(username, password, authorities);
+        }
 
-# Druid 数据源配置，继承spring.datasource.* 配置，相同则覆盖
-...
-spring.datasource.druid.initial-size=5
-spring.datasource.druid.max-active=5
-...
+        public CustomUserDetails(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired,
+            boolean accountNonLocked,
+            Collection<? extends GrantedAuthority> authorities) {
+            super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        }
 
-# Druid 数据源 1 配置，继承spring.datasource.druid.* 配置，相同则覆盖
-...
-spring.datasource.druid.one.max-active=10
-spring.datasource.druid.one.max-wait=10000
-...
+        public CustomUserDetails(Long userId, String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired,
+            boolean accountNonLocked,
+            Collection<? extends GrantedAuthority> authorities) {
+            super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+            this.userId = userId;
+        }
 
-# Druid 数据源 2 配置，继承spring.datasource.druid.* 配置，相同则覆盖
-...
-spring.datasource.druid.two.max-active=20
-spring.datasource.druid.two.max-wait=20000
-...
-```
-**强烈注意**：Spring Boot 2.X 版本不再支持配置继承，多数据源的话每个数据源的所有配置都需要单独配置，否则配置不会生效
+    }
+    ```
+    
+9. 扩展jwt默认返回数据案例
 
-2. 创建数据源
-```java
-@Primary
-@Bean
-@ConfigurationProperties("spring.datasource.druid.one")
-public DataSource dataSourceOne(){
-    return DruidDataSourceBuilder.create().build();
-}
-@Bean
-@ConfigurationProperties("spring.datasource.druid.two")
-public DataSource dataSourceTwo(){
-    return DruidDataSourceBuilder.create().build();
-}
-```
+    ```java
+    public class DefaultJwtTokenEnhancer implements TokenEnhancer {
 
-## 如何配置 Filter
-你可以通过 ```spring.datasource.druid.filters=stat,wall,log4j ...``` 的方式来启用相应的内置Filter，不过这些Filter都是默认配置。如果默认配置不能满足你的需求，你可以放弃这种方式，通过配置文件来配置Filter，下面是例子。
-```xml
-# 配置StatFilter 
-spring.datasource.druid.filter.stat.db-type=h2
-spring.datasource.druid.filter.stat.log-slow-sql=true
-spring.datasource.druid.filter.stat.slow-sql-millis=2000
+        @Override
+        public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+            ((DefaultOAuth2AccessToken)accessToken).setAdditionalInformation(enhance());
 
-# 配置WallFilter 
-spring.datasource.druid.filter.wall.enabled=true
-spring.datasource.druid.filter.wall.db-type=h2
-spring.datasource.druid.filter.wall.config.delete-allow=false
-spring.datasource.druid.filter.wall.config.drop-table-allow=false
+            return accessToken;
+        }
 
-# 其他 Filter 配置不再演示
-```
-目前为以下 Filter 提供了配置支持，请参考文档或者根据IDE提示（```spring.datasource.druid.filter.*```）进行配置。
-- StatFilter
-- WallFilter
-- ConfigFilter
-- EncodingConvertFilter
-- Slf4jLogFilter
-- Log4jFilter
-- Log4j2Filter
-- CommonsLogFilter
+        public Map<String, Object> enhance() {
+            Map<String, Object> info = new HashMap<>();
+            info.put("name", "test");
+            return info;
+        }
 
-要想使自定义 Filter 配置生效需要将对应 Filter 的 ```enabled``` 设置为 ```true``` ，Druid Spring Boot Starter 默认会启用 StatFilter，你也可以将其 ```enabled``` 设置为 ```false``` 来禁用它。
+    }
+    ```
+    
+10. 获取jwt扩展属性
 
-## IDE 提示支持
-![](https://raw.githubusercontent.com/lihengming/java-codes/master/shared-resources/github-images/druid-spring-boot-starter-ide-hint.jpg)
+    ```java
+    @GetMapping("/me")
+    public Object getCurrentUser(@AuthenticationPrincipal Authentication user, HttpServletRequest request) throws UnsupportedEncodingException {
+        String token = StringUtils.substringAfter(request.getHeader("Authorization"), "bearer ");
 
-## 演示
-克隆项目，运行```test```包内的```DemoApplication```。
+        Claims claims = Jwts.parser().setSigningKey(securityProperties.getOauth2().getJwtSigningKey().getBytes("UTF-8"))
+                .parseClaimsJws(token).getBody();
 
-## 参考
-[Druid Wiki](https://github.com/alibaba/druid/wiki/%E9%A6%96%E9%A1%B5)
+        String name = (String) claims.get("name");
 
-[Spring Boot Reference](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
+        return user;
+    }
+
+    ```
+
+## 示例项目
+克隆项目，运行```eaglet-security-web```包内的```WebSecurityApplication```。
