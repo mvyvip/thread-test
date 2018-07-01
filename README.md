@@ -17,13 +17,24 @@ Eaglet Spring Boot Starter Security Oauth2 用于帮助你在Spring Boot项目�
 ## 如何使用
 1. 在 Spring Boot 项目中加入```druid-spring-boot-starter```依赖
 
-    ```Maven```
     ```xml
     <dependency>
         <groupId>com.eaglet</groupId>
         <artifactId>eaglet-spring-boot-starter-security-oauth2</artifactId>
         <version>1.0.0</version>
     </dependency>
+
+    <distributionManagement>
+        <repository>
+          <id>eaglet-deploy-release</id>
+          <url>http://192.168.3.131:8081/repository/maven-releases/</url>
+        </repository>
+
+        <snapshotRepository>
+          <id>eaglet-deploy-snapshot</id>
+          <url>http://192.168.3.131:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
     ```
 2. 添加配置
     ```xml
