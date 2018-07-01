@@ -63,7 +63,21 @@ Eaglet Spring Boot Starter Security Oauth2 用于帮助你在Spring Boot项目�
         header中加Authorization字段：  base64(clientId:clientSecret)
         http://localhost:8081/oauth/token?username=test&scope=all&password=123456&grant_type=password
 
-
+2. 自定义登录方式获取token 
+    
+        header中加Authorization字段：  base64(clientId:clientSecret)
+        localhost:8081/user/login?username=test&password=123456
+    
+    ```
+    {
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mjk5MTcyMTIsInVzZXJfbmFtZSI6InRlc3QiLCJhdXRob3JpdGllcyI6WyJhZG1pbiIsIlJPTEVfVVNFUiJdLCJqdGkiOiJlODQ4Y2NlMC1mY2QyLTQxNWEtODAxMi01NWY2NjcyYTkyOGUiLCJjbGllbnRfaWQiOiJlYWdsZXQiLCJzY29wZSI6WyJhbGwiXX0.xtZDfy53DfKwxoIEO44mRSGx6LCR7BI9Y8LkU1wLWoA",
+      "token_type": "bearer",
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ0ZXN0Iiwic2NvcGUiOlsiYWxsIl0sImF0aSI6ImU4NDhjY2UwLWZjZDItNDE1YS04MDEyLTU1ZjY2NzJhOTI4ZSIsImV4cCI6MTUzMjUwMjAxMiwiYXV0aG9yaXRpZXMiOlsiYWRtaW4iLCJST0xFX1VTRVIiXSwianRpIjoiYzYyZDFjNjQtYWFiZi00MGU3LThhOTctNThjOWM4MmEwNGIzIiwiY2xpZW50X2lkIjoiZWFnbGV0In0.rW2IeWNvjZ4tyC5Yl7t20bGwrg3MA5i-XX_0gsDoYUM",
+      "expires_in": 7199,
+      "scope": "all",
+      "jti": "e848cce0-fcd2-415a-8012-55f6672a928e"
+    }
+    ```
 
 
 
