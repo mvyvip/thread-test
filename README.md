@@ -1,5 +1,4 @@
 # Eaglet Spring Boot Starter Security Oauth2
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/druid-spring-boot-starter/badge.svg)](http://gitlab.develop.feedel.net/modules/eaglet-security)
 
 ## 项目结构
 
