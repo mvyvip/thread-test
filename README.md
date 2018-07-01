@@ -10,15 +10,10 @@ Eaglet Spring Boot Starter Security Oauth2 用于帮助你在Spring Boot项目�
     ```Maven```
     ```xml
     <dependency>
-       <groupId>com.alibaba</groupId>
-       <artifactId>druid-spring-boot-starter</artifactId>
-       <version>1.1.10</version>
+        <groupId>com.eaglet</groupId>
+        <artifactId>eaglet-spring-boot-starter-security-oauth2</artifactId>
+        <version>1.0.0</version>
     </dependency>
-    ```
-    ```Gradle```
-    ```xml
-    compile 'com.alibaba:druid-spring-boot-starter:1.1.10'
-    
     ```
 2. 添加配置
     ```xml
