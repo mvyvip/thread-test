@@ -1,8 +1,8 @@
-# Druid Spring Boot Starter
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/druid-spring-boot-starter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/druid-spring-boot-starter/)
+# Eaglet Spring Boot Starter Security Oauth2
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/druid-spring-boot-starter/badge.svg)](http://gitlab.develop.feedel.net/modules/eaglet-security)
 
-## 中文 | [English](https://github.com/alibaba/druid/blob/master/druid-spring-boot-starter/README_EN.md)  
-Druid Spring Boot Starter 用于帮助你在Spring Boot项目中轻松集成Druid数据库连接池和监控。
+## SPRING-BOOT版文档 | [SPRING版文档](http://gitlab.develop.feedel.net/modules/eaglet-security/README_SPRING.md)  
+Eaglet Spring Boot Starter Security Oauth2 用于帮助你在Spring Boot项目中轻松集 Spring Security Oauth2 用于权限认证
 
 ## 如何使用
 1. 在 Spring Boot 项目中加入```druid-spring-boot-starter```依赖
