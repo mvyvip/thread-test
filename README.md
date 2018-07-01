@@ -1,6 +1,17 @@
 # Eaglet Spring Boot Starter Security Oauth2
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/druid-spring-boot-starter/badge.svg)](http://gitlab.develop.feedel.net/modules/eaglet-security)
 
+## 项目结构
+
+``` lua
+eaglet-security
+├── eaglet-security-browser -- 基于spring security 版本集成非前后端分离web项目的模块（目前可以先不用管这个项目）
+├── eaglet-security-core -- 核心源代码模块
+├── eaglet-spring-boot-starter-security-oauth2 -- 基于springboot做的starter，用于快速集成spring security oauth2
+├── eaglet-security-starter-spring -- 基于spring做的starter，用于非springboot项目快速集成spring security oauth2
+├── eaglet-security-web -- 统一权限管理系统，前后端分离项目可参考这个
+```
+
 ## SPRING-BOOT版文档 | [SPRING版文档](http://gitlab.develop.feedel.net/modules/eaglet-security/README_SPRING.md)  
 Eaglet Spring Boot Starter Security Oauth2 用于帮助你在Spring Boot项目中轻松集 Spring Security Oauth2 用于权限认证
 
