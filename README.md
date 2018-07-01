@@ -61,12 +61,12 @@ Eaglet Spring Boot Starter Security Oauth2 用于帮助你在Spring Boot项目�
 1. 密码模式获取token 
     
         header中加Authorization字段：  base64(clientId:clientSecret)
-        http://localhost:8081/oauth/token?username=test&scope=all&password=123456&grant_type=password
+        http://localhost:8081/oauth/token?username=test&scope=all&password=123456&grant_type=password&appId=23
 
-2. 自定义登录方式获取token 
+2. 自定义登录方式获取token（推荐）
     
         header中加Authorization字段：  base64(clientId:clientSecret)
-        localhost:8081/user/login?username=test&password=123456
+        localhost:8081/user/login?username=test&password=123456&appId=23
     
     ```
     {
@@ -79,9 +79,93 @@ Eaglet Spring Boot Starter Security Oauth2 用于帮助你在Spring Boot项目�
     }
     ```
 
+3. 外部系统接入的时候获取当前用户权限列表
+    
+    header中加Authorization字段： token_type + " " + access_token
+        http://localhost:9000/sys/user/perms
+        
+    ```
+    [
+        "sys:app", 
+        "sys:app:add", 
+        "sys:app:delete", 
+        "sys:app:edit", 
+        "sys:app:list", 
+        "sys:menu", 
+        "sys:menu:add", 
+        "sys:menu:delete", 
+        "sys:menu:list", 
+        "sys:role", 
+        "sys:role:add", 
+        "sys:role:delete", 
+        "sys:role:edit", 
+        "sys:role:list", 
+        "sys:user", 
+        "sys:user:add", 
+        "sys:user:delete", 
+        "sys:user:disable", 
+        "sys:user:edit", 
+        "sys:user:list", 
+        "sys:user:perms"
+    ]
+    ```
+    
+4. 获取当前用户菜单列表
+        
+        header中加Authorization字段： token_type + " " + access_token
+        http://localhost:9000/sys/user/menus
+    ```
+    [
+        {
+            "icon": "el-icon-date", 
+            "index": "1", 
+            "title": "应用管理", 
+            "subs": [
+                {
+                    "icon": null, 
+                    "index": "app", 
+                    "title": "应用列表", 
+                    "subs": [ ]
+                }
+            ]
+        }, 
+        {
+            "icon": "el-icon-date", 
+            "index": "3", 
+            "title": "系统配置", 
+            "subs": [
+                {
+                    "icon": null, 
+                    "index": "menu", 
+                    "title": "菜单管理", 
+                    "subs": [ ]
+                }, 
+                {
+                    "icon": null, 
+                    "index": "user", 
+                    "title": "用户管理", 
+                    "subs": [ ]
+                }, 
+                {
+                    "icon": null, 
+                    "index": "role", 
+                    "title": "角色管理", 
+                    "subs": [ ]
+                }
+            ]
+        }
+    ]
+    ```
+    
+6. 前端监听后端返回http状态码为401的时候，刷新token，如果刷新失败就是refresh_token过期，直接重新调用获取token方法
 
-
-
+        header中加Authorization字段：  base64(clientId:clientSecret)
+        http://localhost:8081/oauth/token?grant_type=refresh_token&refresh_token=9f0509fc-5b9f-4067-acf2-38f5f545ff8f
+    
+7. 退出登录
+    
+        header中加Authorization字段： token_type + " " + access_token
+        http://localhost:8081/logout
 
 - JDBC 配置
 ```xml
