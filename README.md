@@ -36,16 +36,38 @@ Eaglet Spring Boot Starter Security Oauth2 用于帮助你在Spring Boot项目�
         </snapshotRepository>
     </distributionManagement>
     ```
-2. 添加配置
-    ```xml
-    spring.datasource.url= 
-    spring.datasource.username=
-    spring.datasource.password=
-    # ...其他配置（可选，不是必须的，使用内嵌数据库的话上述三项也可省略不填）
+2. 添加常用配置
+    ```yml
+    eaglet:
+      security:
+        oauth2:
+          clients:
+            - clientId: eaglet
+              clientSecret: 123456
+              scope: all
+              accessTokenValidateSeconds: 7200
+              refreshTokenValiditySeconds: 2592000
+              grantType:
+                - refresh_token
+                - password
+                - authorization_code
+    # ...其他配置（可选，不是必须的，见下面文档）
     ```
 
 ## 配置属性
-Druid Spring Boot Starter 配置属性的名称完全遵照 Druid，你可以通过 Spring Boot 配置文件来配置Druid数据库连接池和监控，如果没有配置则使用默认值。
+详细配置属性见[```SecurityProperties```](http://gitlab.develop.feedel.net/modules/eaglet-security/blob/dev/eaglet-security-core/src/main/java/com/eaglet/security/core/properties/SecurityProperties.java) 内提供```setter```方法的可配置属性都将被支持。你可以参考WIKI文档或通过IDE输入提示来进行配置。配置文件的格式你可以选择```.properties```或```.yml```，效果是一样的，在配置较多的情况下推荐使用```.yml```。
+
+
+1. 密码模式获取token 
+    
+        header中加Authorization字段：  base64(clientId:clientSecret)
+        http://localhost:8081/oauth/token?username=test&scope=all&password=123456&grant_type=password
+
+
+
+
+
+
 
 - JDBC 配置
 ```xml
